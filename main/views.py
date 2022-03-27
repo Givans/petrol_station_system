@@ -43,7 +43,10 @@ def admin_page(request):
         this_month = date.month
         this_day = date.day
 
-        about_us = about.details
+        try:
+            about_us = about.details
+        except:
+            about_us = "This is about"
 
         year_records = Sell.objects.filter(year=this_year).order_by('id').reverse()
         month_records = Sell.objects.filter(month=this_month).order_by('id').reverse()
