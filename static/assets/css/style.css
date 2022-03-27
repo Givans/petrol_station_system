@@ -1,0 +1,62 @@
+.contact{
+    background-color: #aaa;
+    font-family: times-new-roman;
+}
+.contact .card{
+    background-color: #ddd!important;
+    margin-bottom: 2px;
+
+}
+.contact .card:hover{
+    font-family: arial;
+    background-color: #eee!important;
+    border: 2px solid blue;
+    font-size: 120%;
+}
+.margin{
+    margin: 0px!important;
+}
+.bottom{
+    bottom: 0px;
+    float: right;
+}
+.c-message{
+    background-color: #aaa;
+    font-family: times-new-roman;
+}
+.c-message .card{
+    background-color: #ddd!important;
+    margin-bottom: 2px;
+
+}
+.c-message .card:hover{
+    background-color: #eee!important;
+    border: 2px solid blue;
+}
+.c-message .card input:hover{
+    transition: .5s ;
+    font-size: 140%;
+}
+.message-item{
+    background-color: #eee;
+    border: 1px solid black;
+}
+.message-item:hover{
+    background-color: #ddd;
+    font-size: 120%;
+    transition: 0.2s;
+}
+.padding {
+    padding: 2%;
+}
+
+body {
+background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('/static/images/bg.jpg');
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment:fixed;
+}
+.main h5, .main h2{
+    color: white;
+}

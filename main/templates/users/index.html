@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{% load static %}
+<main class="main">
+    <div class="container">
+        <div class="row text-center">
+                     <div class="col-md-3"></div>
+                     <div class="col-md-6">
+
+                         {% for message in messages %}
+                    <div class="container-fluid p-0">
+                      <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {{ message }}
+                      </div>
+                    </div>
+                    {% endfor %}
+                     </div>
+                     <div class="col-md-3"></div>
+                  </div>
+        <h5>STAFF: {{user.first_name}} {{user.last_name}}</h5>
+        <br><br><br>
+        <div class="container text-center">
+            <h2><b>JUMLA Petrol station. </b></h2>
+        </div>
+        <br>
+        <hr>
+        <br>
+                <div class="row text-center">
+            <div class="col-md-4">
+                <a class=" btn btn-primary" href="" data-bs-toggle="modal" data-bs-target="#customer">New customer</a>
+            </div>
+            <div class="col-md-4">
+                <a class=" btn btn-success" href="" data-bs-toggle="modal" data-bs-target="#records">View Records</a>
+            </div>
+            <div class="col-md-4">
+                <a class=" btn btn-info" href="" data-bs-toggle="modal" data-bs-target="#updates">Notifications -{{all_updates}}</a>
+            </div>
+        </div>
+        <br><br>
+        <div class="container row">
+            <div class="card col-md-4">
+                <div class="card-title text-center">
+                    <b>Today { {{day_records_count}} }</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Total litres</b></p>
+                    <div class="form-group col-md-6">
+                        <input type="text" readonly value="{{day_litres}} litres" class="form-control">
+                    </div>
+                    <hr>
+                    <em>Total amount: <h3><b>ksh {{ day_amount }}</b></h3></em>
+                </div>
+            </div>
+            <div class="card col-md-4">
+                <div class="card-title text-center">
+                    <b>This Month { {{month_records_count}} }</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Total litres</b></p>
+                    <div class="form-group col-md-6">
+                        <input type="text" readonly value="{{month_litres}} litres" class="form-control">
+                    </div>
+                    <hr>
+                    <em>Total amount: <h3><b>ksh {{ month_amount }}</b></h3></em>
+                </div>
+            </div>
+            <div class="card col-md-4">
+                <div class="card-title text-center">
+                    <b>This year { {{year_records_count}} }</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Total litres</b></p>
+                    <div class="form-group col-md-6">
+                        <input type="text" readonly value="{{year_litres}} litres" class="form-control">
+                    </div>
+                    <hr>
+                    <em>Total amount: <h3><b>ksh {{ year_amount }}</b></h3></em>
+                </div>
+            </div>
+        </div>
+        <br><br>
+
+    </div>
+    <!--modal section-->
+
+     <!-- customer modal-->
+    <div class="modal fade" id="customer" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Manage Sales</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <h4 class="text-center" ><b>Add new sale</b></h4>
+              <form action="/new_sell/{{user.username}}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-4"></div>
+                    <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>Number plate</label>
+                        <input type="text" name="number_plate" placeholder="..." required class="form-control">
+                        <p><small>if none, write either: vehicle, motorcycle or on foot</small></p>
+                    </div>
+
+                </div>
+                  <div class="row mb-3">
+                      <div class="col-md-4"></div>
+                      <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>Fuel type</label>
+                          <select name="fuel" id="" class="form-control" required>
+                              <option value="">Select fuel type</option>
+                              {% for c in category %}
+                              <option value="{{c.name}}">{{c.name}}</option>
+                              {% endfor %}
+                          </select>
+                    </div>
+
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-md-4"></div>
+                           <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>litres</label>
+                        <input type="number" name="litres" placeholder="..." required class="form-control">
+                    </div>
+                  </div>
+                <div class="form-group text-center">
+                <input type="submit" value="Add Now" name="submit" class="btn btn-sm btn-primary">
+                </div>
+              </form>
+            </div>
+            <hr>
+            <br>
+            <div class="container">
+              <h3>All Sales Today</h3>
+              <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col">no</th>
+                      <th scope="col">serial number</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">registered date</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for b in staff %}
+                    <tr>
+                      <td>1</td>
+                      <td>{{b.bs_number}}</td>
+                      <td>{{b.b_name}}</td>
+                      <td>{{b.b_date}}</td>
+                      <td><a class="btn btn-sm btn-outline-secondary">More</a> <a class="btn btn-sm btn-outline-danger">Delete</a></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+            </table>
+          </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--     end of customer modal-->
+
+        <!-- records modal-->
+    <div class="modal fade" id="records" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">My records</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <h4><b>All sell records for {{user.first_name}} {{user.last_name}}</b></h4>
+              <br>
+            <div class="container">
+                <br>
+                <div class="row">
+                    <h5 class="text-center">Monthly Totals: </h5>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-3 card">
+                        <p><b>litres sold: </b> {{all_litres}} L</p>
+                        <p><b>amount: </b> ksh. {{all_amount}}</p>
+                        <p><b>customers: </b> {{all_customers}}</p>
+
+                    </div>
+                </div>
+                <br>
+                <hr>
+
+              <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col">no</th>
+                      <th scope="col">customer</th>
+                      <th scope="col">Fuel Type</th>
+                      <th scope="col">litres</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for r in records %}
+                    <tr>
+                      <td>1</td>
+                      <td>{{r.number_plate}}</td>
+                      <td>{{r.fuel}}</td>
+                      <td>{{r.litres}}</td>
+                      <td>{{r.amount}}</td>
+                      <td>{{r.date}}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+            </table>
+          </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--     end of records modal-->
+
+
+    <!-- notifications modal-->
+    <div class="modal fade" id="updates" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Notifications { {{all_updates}} }</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="container row">
+                  {% for u in updates %}
+                  <div class="card col-md-6">
+                    <div class="card-body row">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5">
+                                <p><b>From:</b> Manager</p>
+                            </div>
+                            <div class="col-md-5">
+                                <p><b>About:</b> {{u.subject}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="form-group col-md-10">
+                            <textarea name="" readonly id="" class="form-control">{{u.message}}</textarea>
+                        </div>
+                        <hr>
+                        <em>date: {{u.date}}</em>
+                    </div>
+                </div>
+
+                  {% endfor %}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--     end of notifications modal-->
+
+         <!-- inbox modal-->
+    <div class="modal fade " id="notifications" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-scrollable">
+        <div class="modal-content contact">
+          <div class="modal-header">
+            <h3 class="modal-title">Messages</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <h4><b>All inbox</b></h4>
+                <div class="row">
+                {% for c in contacts %}
+                    <br>
+                    <div class="card col-md-4">
+                        <div class="margin">
+                            <div class="row">
+                                <h5>From: <a href="#">{{c.name}}</a></h5>
+                                <p>Email: {{c.email}}</p>
+                            </div>
+
+                            <br>
+                            <div class="row">
+                                <p class="message">
+                                {{c.message| truncatewords:25}}
+                                </p>
+                            </div>
+                            <div class="row ">
+                                <div class="col-sm-9">
+                                    <small><b>{{c.date}}</b></small>
+                                </div>
+                                <div class="col-sm-2 bottom">
+                                    <a href="" class="btn btn-outline-primary">Reply</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+
+               </div>
+            </div>
+            <hr>
+            <br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--     end of parking modal-->
+    <!--end inbox section-->
+
+    </main>
+
+{%endblock %}
