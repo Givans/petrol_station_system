@@ -34,7 +34,7 @@ class Staff(models.Model):
     username = models.CharField(max_length=12)
     email = models.EmailField()
     idno = models.IntegerField()
-    age = models.IntegerField(default=18)
+    age = models.CharField(max_length=2, default=18)
     date = models.DateTimeField(default=datetime.datetime.now)
     profile = models.ImageField(upload_to="images", null=False, default='default.jpg')
     address = models.CharField(max_length=50, default='John')
