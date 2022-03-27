@@ -28,7 +28,10 @@ def admin_page(request):
         records = Sell.objects.all().order_by('id').reverse()
         updates = Update.objects.all().order_by('id').reverse()
         staffs = Staff.objects.all().order_by('id').reverse()
-        about = About.objects.get(num=1)
+        try:
+            about = About.objects.get(num=1)
+        except:
+            about = "Write an about"
 
         categories_no = Category.objects.all().count()
         all_customers = Sell.objects.all().count()
